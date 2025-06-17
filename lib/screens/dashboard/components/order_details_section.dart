@@ -15,7 +15,7 @@ class OrderDetailsSection extends StatelessWidget {
     return Consumer<DataProvider>(
       builder: (context, dataProvider, child) {
         //TODO: should complete Make this order number dynamic bt calling calculateOrdersWithStatus
-        int totalOrder = 0;
+        int totalOrder = dataProvider.calculateOrdersWithStatus();x
         int pendingOrder = 0;
         int processingOrder = 0;
         int cancelledOrder = 0;

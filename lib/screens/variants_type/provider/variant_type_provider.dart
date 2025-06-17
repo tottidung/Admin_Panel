@@ -51,7 +51,7 @@ class VariantsTypeProvider extends ChangeNotifier {
     try {
       if(variantTypeForUpdate != null){
         Map<String, dynamic> variantType = {'name': variantNameCtrl.text, 'type':variantTypeCtrl.text};
-        final response = await service updateItem(
+        final response = await service.updateItem(
           endpointUrl: 'variantTypes', itemData:variantType, itemId:variantTypeForUpdate?.sId ?? '');
           if(response.isOk){
               ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
@@ -83,7 +83,7 @@ class VariantsTypeProvider extends ChangeNotifier {
     }
   }
 
-  deleteVariantType(VariantType variantType){
+  deleteVariantType(VariantType variantType) async{
     try {
       Response response = await service.deleteItem(endpointUrl: 'variantTypes', itemId: variantType.sId ?? '');
       if (response.isOk) {

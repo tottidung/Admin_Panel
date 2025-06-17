@@ -1,5 +1,4 @@
-import 'dart:math';
-import 'dart:nativewrappers/_internal/vm/lib/math_patch.dart';
+import 'dart:developer';
 import 'package:admin/models/api_response.dart';
 import 'package:admin/utility/snack_bar_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,17 +12,12 @@ import '../../../services/http_services.dart';
 class SubCategoryProvider extends ChangeNotifier {
   HttpService service = HttpService();
   final DataProvider _dataProvider;
-
   final addSubCategoryFormKey = GlobalKey<FormState>();
   TextEditingController subCategoryNameCtrl = TextEditingController();
   Category? selectedCategory;
   SubCategory? subCategoryForUpdate;
 
-
-
-
   SubCategoryProvider(this._dataProvider);
-
 
   addSubCategory() async{
       try {
@@ -40,7 +34,7 @@ class SubCategoryProvider extends ChangeNotifier {
             SnackBarHelper.showErrorSnackBar('Failed to add Sub Category: ${apiResponse.message}');
           }
         } else {
-            SnackBarHelper.showErrorSnackBar('Error ${response.body?['message']??response.statusText}');
+            SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
         }
       } catch (e) {
         print(e);
@@ -49,8 +43,6 @@ class SubCategoryProvider extends ChangeNotifier {
       }
     }
 
-
-  //TODO: should complete updateSubCategory
   updateSubCategory() async{
     try {
       if(subCategoryForUpdate != null){

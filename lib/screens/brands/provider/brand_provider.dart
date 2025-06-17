@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+import 'dart:developer';
 
 import 'package:admin/models/api_response.dart';
 import 'package:admin/utility/snack_bar_helper.dart';
