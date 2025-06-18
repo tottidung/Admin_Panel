@@ -16,7 +16,7 @@ class CategorySubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    //TODO: should complete call setDataForUpdateCategory
+    context.categoryProvider.setDataForUpdateCategory(category);
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
@@ -77,8 +77,13 @@ class CategorySubmitForm extends StatelessWidget {
                     ),
                     onPressed: () {
                       // Validate and save the form
-                      if (context.categoryProvider.addCategoryFormKey.currentState!.validate()) {
-                        context.categoryProvider.addCategoryFormKey.currentState!.save();
+                      if (context
+                          .categoryProvider.addCategoryFormKey.currentState!
+                          .validate()) {
+                        context
+                            .categoryProvider.addCategoryFormKey.currentState!
+                            .save();
+                        context.categoryProvider.submitCategory();
                         context.categoryProvider.addCategory();
                         Navigator.of(context).pop();
                       }
@@ -102,7 +107,9 @@ void showAddCategoryForm(BuildContext context, Category? category) {
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: bgColor,
-        title: Center(child: Text('Add Category'.toUpperCase(), style: TextStyle(color: primaryColor))),
+        title: Center(
+            child: Text('Add Category'.toUpperCase(),
+                style: TextStyle(color: primaryColor))),
         content: CategorySubmitForm(category: category),
       );
     },
