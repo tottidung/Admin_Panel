@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+import 'dart:developer';
 
 import 'package:admin/models/api_response.dart';
 import 'package:admin/utility/snack_bar_helper.dart';
@@ -8,7 +8,6 @@ import '../../../models/order.dart';
 import '../../../services/http_services.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../core/data/data_provider.dart';
-
 
 class OrderProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -20,28 +19,33 @@ class OrderProvider extends ChangeNotifier {
 
   OrderProvider(this._dataProvider);
 
-  updateOrder()  async{
+  updateOrder() async {
     try {
-      if(orderForUpdate != null) {
-        Map<String, dynamic> order = {'trackingUrl': trackingUrlCtrl.text, 'orderStatus': selectedOrderStatus};
-        final response = await service.updateItem(endpointUrl: 'orders', itemData: order, itemId: orderForUpdate?.sId ?? '');
-        if(response.isOk) {
+      if (orderForUpdate != null) {
+        Map<String, dynamic> order = {
+          'trackingUrl': trackingUrlCtrl.text,
+          'orderStatus': selectedOrderStatus
+        };
+        final response = await service.updateItem(
+            endpointUrl: 'orders',
+            itemData: order,
+            itemId: orderForUpdate?.sId ?? '');
+        if (response.isOk) {
           ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-          if(apiResponse.success == true) {
+          if (apiResponse.success == true) {
             SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
             log('Order Updated');
-            _dataProvider.getALlOrders();
+            _dataProvider.getAllOrders();
+          } else {
+            SnackBarHelper.showErrorSnackBar(
+                'Failed to add Order: ${apiResponse.message}');
           }
-          else {
-            SnackBarHelper.showErrorSnackBar('Failed to add Order: ${apiResponse.message}');
-          }
-        }
-        else {
-          SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Error ${response.body?['message'] ?? response.statusText}');
         }
       }
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       SnackBarHelper.showErrorSnackBar('An error occured: $e');
       rethrow;
@@ -49,25 +53,25 @@ class OrderProvider extends ChangeNotifier {
   }
 
   deleteOrder(Order order) async {
-    try{
-      Response response = await service.deleteItem(endpointUrl: 'orders', itemId: order.sId ?? '');
-      if(response.isOk) {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'orders', itemId: order.sId ?? '');
+      if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-        if(apiResponse.success == true) {
+        if (apiResponse.success == true) {
           SnackBarHelper.showSuccessSnackBar('Order Deleted Successfully');
-          _dataProvider.getALlOrders();
+          _dataProvider.getAllOrders();
         }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
-      else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
-      }
-    }
-    catch(e) {
+    } catch (e) {
       print(e);
-      rethrow; 
+      rethrow;
     }
   }
-  
+
   updateUI() {
     notifyListeners();
   }

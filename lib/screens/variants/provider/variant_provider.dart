@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import '../../../models/variant_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
