@@ -84,9 +84,25 @@ class CouponCodeProvider extends ChangeNotifier {
           'applicableSubCategory': selectedSubCategory?.sId,
           'applicableProduct': selectedProduct?.sId,
         };
+        final response = await service.updateItem(endpointUrl: 'couponCodes', itemId: couponForUpdate?.sId ?? '', itemData: coupon);
+        if (response.isOk) {
+          ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+          if(apiResponse.success == true){
+            clearFields();
+            SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
+            log('Coupon Updated');
+            _dataProvider.getAllCoupons();
+          } else {
+            SnackBarHelper.showErrorSnackBar("Failed to add Coupon: ${apiResponse.message}");
+          }
+        } else {
+          SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        }
       }
     } catch (e) {
-      
+      print(e);
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      rethrow;
     }
   }
 
@@ -100,7 +116,23 @@ class CouponCodeProvider extends ChangeNotifier {
   }
 
 
-  //TODO: should complete deleteCoupon
+  deleteCoupon(Coupon coupon) async {
+    try {
+      Response response = await service.deleteItem(endpointUrl: 'couponCodes', itemId: coupon .sId ?? '');
+      if(response.isOk){
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if(apiResponse.success == true){
+          SnackBarHelper.showSuccessSnackBar('Coupon Deleted Successfully');
+          _dataProvider.getAllCoupons();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
 
 
