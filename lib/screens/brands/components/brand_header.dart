@@ -19,7 +19,7 @@ class BrandHeader extends StatelessWidget {
         Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
-            context.dataProvider.filterBrands(val);  
+            context.dataProvider.filteredBrands(val);  
           },
         )),
         ProfileCard()

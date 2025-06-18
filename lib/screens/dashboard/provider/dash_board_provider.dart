@@ -223,7 +223,7 @@ class DashBoardProvider extends ChangeNotifier {
   }
 
 
-  filterSubcategory(category){
+  filterSubcategory(Category category){
     selectedSubCategory = null;
     selectedBrand = null;
     selectedCategory = category;
