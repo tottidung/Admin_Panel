@@ -83,12 +83,20 @@ class VariantsProvider extends ChangeNotifier {
   }
 
   deleteVariant(Variant variant) async{
-    if(variant != null) {
-      variantForUpdate = variant;
-      variantCtrl.text = variant.name ?? '';
-      selectedVariantType = _dataProvider.variantTypes.firstWhereOrNull((element) => element.sId == variant.variantTypeId?.sId);
-    } else {
-      clearFields();
+    try {
+      Response response = await service.deleteItem(endpointUrl: 'variants', itemId: variant.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if(apiResponse.success == true){
+          SnackBarHelper.showSuccessSnackBar('Variant Deleted Successfully');
+          _dataProvider.getAllVariant();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
