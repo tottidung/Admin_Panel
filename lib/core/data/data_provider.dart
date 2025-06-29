@@ -119,7 +119,7 @@ class DataProvider extends ChangeNotifier {
               (json as List).map((item) => SubCategory.fromJson(item)).toList(),
         );
         _allSubCategories = apiResponse.data ?? [];
-        _filteredSubCategories = List.from(_allCategories);
+        _filteredSubCategories = List.from(_allSubCategories);
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       }
