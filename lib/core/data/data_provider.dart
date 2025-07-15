@@ -15,7 +15,6 @@ import '../../../models/category.dart';
 import '../../models/brand.dart';
 import '../../models/sub_category.dart';
 import '../../models/variant.dart';
-import '../../models/user.dart';
 
 class DataProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -61,11 +60,6 @@ class DataProvider extends ChangeNotifier {
   List<MyNotification> _filteredNotifications = [];
   List<MyNotification> get notifications => _filteredNotifications;
 
-  List<User> _allUsers = [];
-  List<User> _filteredUsers = [];
-
-  List<User> get users => _filteredUsers;
-
   DataProvider() {
     getAllProduct();
     getAllCategory();
@@ -76,6 +70,63 @@ class DataProvider extends ChangeNotifier {
     getAllPosters();
     getAllOrders();
     getAllNotifications();
+    getAllUsers();
+  }
+
+  Future<List<User>> getAllUsers({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'users');
+      if (response.isOk) {
+        ApiResponse<List<User>> apiResponse = ApiResponse<List<User>>.fromJson(
+          response.body,
+          (json) => (json as List).map((item) => User.fromJson(item)).toList(),
+        );
+        _allUsers = apiResponse.data ?? [];
+        _filteredUsers = List.from(_allUsers);
+        notifyListeners();
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredUsers;
+  }
+
+  void filterUsers(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredUsers = List.from(_allUsers);
+    } else {
+      final lowerKeyword = keyword.toLowerCase();
+      _filteredUsers = _allUsers.where((user) {
+        return (user.name ?? '').toLowerCase().contains(lowerKeyword) ||
+            (user.email ?? '').toLowerCase().contains(lowerKeyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateUserBlockStatus(String userId, bool isBlocked) async {
+    try {
+      final response = await service.updateItem(
+        endpointUrl: 'users',
+        itemId: '$userId/block',
+        itemData: {'isBlocked': isBlocked},
+      );
+
+      if (response.isOk) {
+        SnackBarHelper.showSuccessSnackBar(
+          "User ${isBlocked ? 'blocked' : 'unblocked'} successfully",
+        );
+        await getAllUsers();
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+          response.body?['message'] ?? 'Failed to update user status',
+        );
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar(e.toString());
+    }
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {

@@ -6,6 +6,7 @@ import '../../notification/notification_screen.dart';
 import '../../order/order_screen.dart';
 import '../../posters/poster_screen.dart';
 import '../../variants/variants_screen.dart';
+import '../../user/user_screen.dart';
 import '../../variants_type/variants_type_screen.dart';
 import '../../users/user_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +43,9 @@ class MainScreenProvider extends ChangeNotifier {
         break;
       case 'Poster':
         selectedScreen = PosterScreen();
+        break;
+      case 'User':
+        selectedScreen = UserScreen();
         break;
       case 'Order':
         selectedScreen = OrderScreen();

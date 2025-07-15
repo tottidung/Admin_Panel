@@ -79,6 +79,13 @@ class SideMenu extends StatelessWidget {
               context.mainScreenProvider.navigateToScreen('Poster');
             },
           ),
+           DrawerListTile(
+            title: "AdminUser",
+            svgSrc: "assets/icons/menu_doc.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('User');
+            },
+          ),
           DrawerListTile(
             title: "Notifications",
             svgSrc: "assets/icons/menu_notification.svg",

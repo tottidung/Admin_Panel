@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 2025/07/12-17:38:09.265 35e0 Reusing MANIFEST C:\Users\Manh Hoang\AppData\Local\Temp\flutter_tools.727fd583\flutter_tools_chrome_device.75044e23\Default\Extension State/MANIFEST-000001
 2025/07/12-17:38:09.265 35e0 Recovering log #3
 2025/07/12-17:38:09.266 35e0 Reusing old log C:\Users\Manh Hoang\AppData\Local\Temp\flutter_tools.727fd583\flutter_tools_chrome_device.75044e23\Default\Extension State/000003.log 
+=======
+2025/07/16-00:05:42.731 5eb4 Reusing MANIFEST C:\Users\Hello!!\AppData\Local\Temp\flutter_tools.2ce1d419\flutter_tools_chrome_device.7e1e73a5\Default\Extension State/MANIFEST-000001
+2025/07/16-00:05:42.732 5eb4 Recovering log #3
+2025/07/16-00:05:42.733 5eb4 Reusing old log C:\Users\Hello!!\AppData\Local\Temp\flutter_tools.2ce1d419\flutter_tools_chrome_device.7e1e73a5\Default\Extension State/000003.log 
+>>>>>>> 7d8da26 (update)
