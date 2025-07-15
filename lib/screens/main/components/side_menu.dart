@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-
 class SideMenu extends StatelessWidget {
   const SideMenu({
     Key? key,
@@ -85,6 +84,13 @@ class SideMenu extends StatelessWidget {
             svgSrc: "assets/icons/menu_notification.svg",
             press: () {
               context.mainScreenProvider.navigateToScreen('Notifications');
+            },
+          ),
+          DrawerListTile(
+            title: "User",
+            svgSrc: "assets/icons/menu_tran.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('User');
             },
           ),
         ],

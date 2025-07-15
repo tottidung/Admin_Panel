@@ -20,20 +20,26 @@ class VariantsProvider extends ChangeNotifier {
 
   addvariant() async {
     try {
-      Map<String, dynamic> variant = {'name': variantCtrl.text, 'variantTypeId':selectedVariantType?.sId};
-      final response = await service.addItem(endpointUrl: 'variants', itemData: variant);
-      if(response.isOk){
+      Map<String, dynamic> variant = {
+        'name': variantCtrl.text,
+        'variantTypeId': selectedVariantType?.sId
+      };
+      final response =
+          await service.addItem(endpointUrl: 'variants', itemData: variant);
+      if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-        if(apiResponse.success == true){
+        if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
           log('Variant added');
           _dataProvider.getAllVariant();
-        } else{
-          SnackBarHelper.showErrorSnackBar('Failed to add Variant: ${apiResponse.message}');
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add Variant: ${apiResponse.message}');
         }
-      }else{
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message']??response.statusText}');
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -42,27 +48,33 @@ class VariantsProvider extends ChangeNotifier {
     }
   }
 
-
   updateVariant() async {
     try {
-      if(variantForUpdate != null){
-        Map<String, dynamic> variant = {'name':variantCtrl.text, 'variantTypeId':selectedVariantType?.sId};
-        final response = 
-        await service.updateItem(endpointUrl: 'variants', itemData: variant, itemId: variantForUpdate?.sId ?? '');
-        if(response.isOk){
+      if (variantForUpdate != null) {
+        Map<String, dynamic> variant = {
+          'name': variantCtrl.text,
+          'variantTypeId': selectedVariantType?.sId
+        };
+        final response = await service.updateItem(
+            endpointUrl: 'variants',
+            itemData: variant,
+            itemId: variantForUpdate?.sId ?? '');
+        if (response.isOk) {
           ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-          if(response.isOk){
+          if (response.isOk) {
             ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-            if(apiResponse.success == true){
+            if (apiResponse.success == true) {
               clearFields();
               SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
               log('Variant Updated');
               _dataProvider.getAllVariant();
             } else {
-              SnackBarHelper.showErrorSnackBar('Failed to add Variant: ${apiResponse.message}');
+              SnackBarHelper.showErrorSnackBar(
+                  'Failed to add Variant: ${apiResponse.message}');
             }
           } else {
-            SnackBarHelper.showErrorSnackBar('Error ${response.body?['message']??response.statusText}');
+            SnackBarHelper.showErrorSnackBar(
+                'Error ${response.body?['message'] ?? response.statusText}');
           }
         }
       }
@@ -73,8 +85,7 @@ class VariantsProvider extends ChangeNotifier {
     }
   }
 
-
-  submitVariant(){
+  submitVariant() {
     if (variantForUpdate != null) {
       updateVariant();
     } else {
@@ -82,11 +93,12 @@ class VariantsProvider extends ChangeNotifier {
     }
   }
 
-  deleteVariant(Variant variant) async{
-    if(variant != null) {
+  deleteVariant(Variant? variant) async {
+    if (variant != null) {
       variantForUpdate = variant;
       variantCtrl.text = variant.name ?? '';
-      selectedVariantType = _dataProvider.variantTypes.firstWhereOrNull((element) => element.sId == variant.variantTypeId?.sId);
+      selectedVariantType = _dataProvider.variantTypes.firstWhereOrNull(
+          (element) => element.sId == variant.variantTypeId?.sId);
     } else {
       clearFields();
     }
@@ -96,8 +108,8 @@ class VariantsProvider extends ChangeNotifier {
     if (variant != null) {
       variantForUpdate = variant;
       variantCtrl.text = variant.name ?? '';
-      selectedVariantType =
-          _dataProvider.variantTypes.firstWhereOrNull((element) => element.sId == variant.variantTypeId?.sId);
+      selectedVariantType = _dataProvider.variantTypes.firstWhereOrNull(
+          (element) => element.sId == variant.variantTypeId?.sId);
     } else {
       clearFields();
     }

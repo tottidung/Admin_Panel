@@ -266,48 +266,42 @@ class ProductSubmitForm extends StatelessWidget {
                 ],
               ),
               SizedBox(width: defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer<DashBoardProvider>(
-                      builder: (context, dashProvider, child) {
-                        return CustomDropdown(
-                          key: ValueKey(dashProvider.selectedVariantType?.sId),
-                          initialValue: dashProvider.selectedVariantType,
-                          items: context.dataProvider.variantTypes,
-                          displayItem: (VariantType? variantType) =>
-                              variantType?.name ?? '',
-                          onChanged: (newValue) {
-                            if (newValue != null) {
-                              context.dashBoardProvider.filterVariant(newValue);
-                            }
-                          },
-                          hintText: 'Select Variant type',
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<DashBoardProvider>(
-                      builder: (context, dashProvider, child) {
-                        final filteredSelectedItems = dashProvider
-                            .selectedVariants
-                            .where((item) => dashProvider.variantsByVariantType
-                                .contains(item))
-                            .toList();
-                        return MultiSelectDropDown(
-                          items: dashProvider.variantsByVariantType,
-                          onSelectionChanged: (newValue) {
-                            dashProvider.selectedVariants = newValue;
-                            dashProvider.updateUI();
-                          },
-                          displayItem: (String item) => item,
-                          selectedItems: filteredSelectedItems,
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              Consumer<DashBoardProvider>(
+                builder: (context, dashProvider, child) {
+                  final variantTypes = context.dataProvider.variantTypes;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: variantTypes.map((variantType) {
+                      final variants = context.dataProvider.variants
+                          .where((v) => v.variantTypeId?.sId == variantType.sId)
+                          .map((v) => v.name ?? '')
+                          .toList();
+
+                      final selectedItems =
+                          dashProvider.selectedVariantsMap[variantType] ??
+                              [];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${variantType.name ?? 'Variant'}:'),
+                          MultiSelectDropDown(
+                            items: variants,
+                            selectedItems: selectedItems,
+                            onSelectionChanged: (newList) {
+                              dashProvider.selectedVariantsMap[variantType] =
+                                  newList;
+                              dashProvider.updateUI();
+                            },
+                            displayItem: (String item) => item,
+                          ),
+                          SizedBox(height: 12),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                },
               ),
               SizedBox(height: defaultPadding),
               Row(

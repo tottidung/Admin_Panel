@@ -47,9 +47,10 @@ class NotificationProvider extends ChangeNotifier {
           SnackBarHelper.showErrorSnackBar(
               'Failed to send notification: ${apiResponse.message}');
         }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
-      SnackBarHelper.showErrorSnackBar(
-          'Error ${response.body?['message'] ?? response.statusText}');
     } catch (e) {
       print(e);
       SnackBarHelper.showErrorSnackBar('An error onccurred');

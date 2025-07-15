@@ -15,6 +15,7 @@ import '../../../models/category.dart';
 import '../../models/brand.dart';
 import '../../models/sub_category.dart';
 import '../../models/variant.dart';
+import '../../models/user.dart';
 
 class DataProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -59,6 +60,11 @@ class DataProvider extends ChangeNotifier {
   List<MyNotification> _allNotifications = [];
   List<MyNotification> _filteredNotifications = [];
   List<MyNotification> get notifications => _filteredNotifications;
+
+  List<User> _allUsers = [];
+  List<User> _filteredUsers = [];
+
+  List<User> get users => _filteredUsers;
 
   DataProvider() {
     getAllProduct();
@@ -119,7 +125,7 @@ class DataProvider extends ChangeNotifier {
               (json as List).map((item) => SubCategory.fromJson(item)).toList(),
         );
         _allSubCategories = apiResponse.data ?? [];
-        _filteredSubCategories = List.from(_allCategories);
+        _filteredSubCategories = List.from(_allSubCategories);
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       }
@@ -270,10 +276,9 @@ class DataProvider extends ChangeNotifier {
       _filteredProducts = _allProducts.where((product) {
         final productNameContainsKeyword =
             (product.name ?? '').toLowerCase().contains(lowerKeyword);
-        final categoryNameContainsKeyword = product.proSubCategoryId?.name
-                ?.toLowerCase()
-                .contains(lowerKeyword) ??
-            false;
+        final categoryNameContainsKeyword =
+            product.proCategoryId?.name?.toLowerCase().contains(lowerKeyword) ??
+                false;
         final subCategoryNameContainsKeyword = product.proSubCategoryId?.name
                 ?.toLowerCase()
                 .contains(lowerKeyword) ??
@@ -356,6 +361,47 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<User>> getAllUsers({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'users');
+      if (response.isOk) {
+        ApiResponse<List<User>> apiResponse = ApiResponse<List<User>>.fromJson(
+          response.body,
+          (json) => (json as List).map((item) => User.fromJson(item)).toList(),
+        );
+
+        _allUsers = apiResponse.data ?? [];
+        _filteredUsers = List.from(_allUsers);
+        notifyListeners();
+
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) {
+        SnackBarHelper.showErrorSnackBar(e.toString());
+      }
+      rethrow;
+    }
+
+    return _filteredUsers;
+  }
+
+  void filterUsers(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredUsers = List.from(_allUsers);
+    } else {
+      final lowerKeyword = keyword.toLowerCase();
+      _filteredUsers = _allUsers.where((user) {
+        return (user.name ?? '').toLowerCase().contains(lowerKeyword) ||
+            (user.email ?? '').toLowerCase().contains(lowerKeyword);
+      }).toList();
+    }
+
+    notifyListeners();
+  }
+
   int calculateOrdersWithStatus({String? status}) {
     int totalOrders = 0;
     if (status == null) {
@@ -418,7 +464,7 @@ class DataProvider extends ChangeNotifier {
         _allOrders = apiResponse.data ?? [];
         _filteredOrders = List.from(_allOrders);
         notifyListeners();
-        if (showSnack) SnackBarHelper.showErrorSnackBar(apiResponse.message);
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       }
     } catch (e) {
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
@@ -449,6 +495,10 @@ class DataProvider extends ChangeNotifier {
     } else if (productQntType == 'Out of Stock') {
       _filteredProducts = _allProducts.where((product) {
         return product.quantity != null && product.quantity == 0;
+      }).toList();
+    } else if (productQntType == 'Limited Stock') {
+      _filteredProducts = _allProducts.where((product) {
+        return product.quantity != null && product.quantity == 1;
       }).toList();
     } else if (productQntType == 'Other Stock') {
       _filteredProducts = _allProducts.where((product) {
